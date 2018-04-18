@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.example.michaelrokas.cryptowidget.Kraken.KrakenApi;
@@ -22,6 +23,7 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
 
     String key = "api key here";
     String secret = "private key here";
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,6 +40,17 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
     }
 
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
+        //show loading spinner
+        final int N = appWidgetIds.length;
+        for (int i=0; i<N; i++) {
+            int appWidgetId = appWidgetIds[i];
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+            views.setViewVisibility(R.id.refresh, View.GONE);
+            views.setViewVisibility(R.id.progress_bar, View.VISIBLE);
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+
+        //setup callback
         KrakenApi.TradeBalanceCallback callbcack = new KrakenApi.TradeBalanceCallback(){
             @Override
             public void onResponse(TradeBalanceResponse response) {
@@ -54,6 +67,7 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             }
         };
 
+        //make api call
         KrakenApi api = new KrakenApi(key,secret);
         api.fetchTradeBalance(callbcack);
     }
@@ -73,6 +87,10 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
         for (int i=0; i<N; i++) {
             int appWidgetId = appWidgetIds[i];
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
+
+            //show refresh button
+            views.setViewVisibility(R.id.progress_bar, View.GONE);
+            views.setViewVisibility(R.id.refresh, View.VISIBLE);
 
             //create intent for settings activity
             Intent settingsIntent = new Intent(context, MainActivity.class);

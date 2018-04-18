@@ -65,7 +65,14 @@
                 android:id="@+id/refresh"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@drawable/ic_refresh" />
+                android:src="@drawable/ic_refresh"/>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </LinearLayout>
