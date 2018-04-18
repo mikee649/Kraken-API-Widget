@@ -6,7 +6,6 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -15,21 +14,20 @@ import android.widget.RemoteViews;
 import com.example.michaelrokas.cryptowidget.Kraken.KrakenApi;
 import com.example.michaelrokas.cryptowidget.Kraken.TradeBalanceResponse;
 
-import okhttp3.internal.connection.StreamAllocation;
-
 /**
  * Created by michaelrokas on 2018-04-16.
  */
 
 public class CryptoWidgetProvider extends AppWidgetProvider {
 
-    String key = "7jLAURQekHf44pnny2ZoRd2MFPDf0jYEX41F56gJSUdjyy5wiSx/cMeD";
-    String secret = "rSbUuSQgg5r7jqWFO+/ddaanHTwwH6leEGgKmodDYiTJICFzZOcSrTxCHdo0m12kv9MaN/DOGYc/bsE930fs1Q==";
+    String key = "api key here";
+    String secret = "private key here";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
+        //Todo: only do this if the action is AppWidgetManager.ACTION_APPWIDGET_UPDATE
         if(intent.getBooleanExtra("refresh", false)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), CryptoWidgetProvider.class.getName());
@@ -52,7 +50,7 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
 
             @Override
             public void onFailure() {
-
+                //Todo: implement onFailure
             }
         };
 
@@ -76,10 +74,12 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             int appWidgetId = appWidgetIds[i];
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
 
+            //create intent for settings activity
             Intent settingsIntent = new Intent(context, MainActivity.class);
             PendingIntent settingsPendingIntent = PendingIntent.getActivity(context, 0, settingsIntent, 0);
             views.setOnClickPendingIntent(R.id.settings, settingsPendingIntent);
 
+            //create refresh intent
             Intent refreshIntent = new Intent(context, CryptoWidgetProvider.class);
             refreshIntent.putExtra("refresh",true);
             refreshIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -96,7 +96,7 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
         balanceFloat = Math.round(balanceFloat*100)/100f;
         String balanceString = "$" + balanceFloat;
 
-        if(balanceString.length()-balanceString.indexOf('.') < 2)
+        if(balanceString.length()-balanceString.indexOf('.') <= 2)
             balanceString += '0';
 
         SpannableString balanceFormated =new SpannableString(balanceString);

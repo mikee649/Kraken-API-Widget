@@ -23,8 +23,8 @@ import retrofit2.http.POST;
  */
 
 public class KrakenApi {
-    Retrofit retrofit;
-    KrakenService service;
+    private Retrofit retrofit;
+    private KrakenService service;
 
     private String apiKey;
     private String privateKey;
