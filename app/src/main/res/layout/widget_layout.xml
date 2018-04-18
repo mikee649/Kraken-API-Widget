@@ -61,11 +61,26 @@
                 android:layout_marginBottom="8dp"
                 android:src="@drawable/ic_settings"/>
 
-            <ImageView
+            <LinearLayout
                 android:id="@+id/refresh"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_refresh"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_refresh"/>
+
+                <TextView
+                    android:id="@+id/last_update_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8sp"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/progress_bar"

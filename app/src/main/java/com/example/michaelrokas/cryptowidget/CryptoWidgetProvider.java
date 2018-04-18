@@ -15,14 +15,18 @@ import android.widget.RemoteViews;
 import com.example.michaelrokas.cryptowidget.Kraken.KrakenApi;
 import com.example.michaelrokas.cryptowidget.Kraken.TradeBalanceResponse;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by michaelrokas on 2018-04-16.
  */
 
 public class CryptoWidgetProvider extends AppWidgetProvider {
 
-    String key = "api key here";
-    String secret = "private key here";
+    String key = "";
+    String secret = "";
 
 
     @Override
@@ -91,6 +95,11 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             //show refresh button
             views.setViewVisibility(R.id.progress_bar, View.GONE);
             views.setViewVisibility(R.id.refresh, View.VISIBLE);
+            views.setViewVisibility(R.id.last_update_time, View.VISIBLE);
+
+            //set last update time
+
+            views.setTextViewText(R.id.last_update_time, getTime());
 
             //create intent for settings activity
             Intent settingsIntent = new Intent(context, MainActivity.class);
@@ -107,6 +116,16 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.value, formatedBalance);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
+
+    private String getTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        String currentTime = sdf.format(new Date());
+
+        if(currentTime.charAt(0) == '0')
+            currentTime = currentTime.substring(1);
+
+        return  currentTime;
     }
 
     private SpannableString getFormatedBalance(String balance){
