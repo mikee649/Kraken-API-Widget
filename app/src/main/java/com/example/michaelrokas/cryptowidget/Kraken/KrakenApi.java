@@ -1,9 +1,6 @@
 package com.example.michaelrokas.cryptowidget.Kraken;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.example.michaelrokas.cryptowidget.MainActivity;
 
 import java.security.MessageDigest;
 import java.util.Base64;
@@ -18,11 +15,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 /**
  * Created by michaelrokas on 2018-04-17.
@@ -45,6 +39,11 @@ public class KrakenApi {
                 @Field("asset") String asset);
     }
 
+    public interface TradeBalanceCallback{
+        void onResponse(TradeBalanceResponse response);
+        void onFailure();
+    }
+
     public KrakenApi(String apiKey, String privateKey){
         this.apiKey = apiKey;
         this.privateKey = privateKey;
@@ -56,7 +55,7 @@ public class KrakenApi {
         service = retrofit.create(KrakenService.class);
     }
 
-    public void fetchTradeBalance(final MainActivity mainActivity){
+    public void fetchTradeBalance(final TradeBalanceCallback callback){
         String nonce = String.valueOf(System.currentTimeMillis());
         String postBody = "nonce=" + nonce + "&asset=ZCAD";
 
@@ -66,19 +65,12 @@ public class KrakenApi {
         call.enqueue(new Callback<TradeBalanceResponse>() {
             @Override
             public void onResponse(@Nullable Call<TradeBalanceResponse> call, @Nullable Response<TradeBalanceResponse> response) {
-                if(response.body().getResult() != null) {
-                    Log.d("Response", response.body().getResult().getEquivalentBalance());
-                    mainActivity.set(response.body().getResult().getEquivalentBalance());
-                }
-                else {
-                    Log.e("Error", response.body().getError()[0]);
-                    mainActivity.set(response.body().getError()[0]);
-                }
+                callback.onResponse(response.body());
             }
 
             @Override
             public void onFailure(Call<TradeBalanceResponse> call, Throwable t) {
-
+                callback.onFailure();
             }
         });
     }
