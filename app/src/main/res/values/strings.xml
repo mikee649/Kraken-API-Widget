@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">CryptoWidget</string>
+    <string name="app_name">Kraken API Widget</string>
+    <string name="api_key">Kraken API Key</string>
+    <string name="private_key">Kraken Private Key</string>
+    <string name="settings">Settings</string>
+    <string name="save_settings">Save Settings</string>
+    <string name="show_time">Show time of last refresh</string>
+
+    <string name="attention">Attention</string>
+    <string name="disclaimer">
+        All keys are stored locally on the device and are &lt;b&gt;NOT&lt;/b&gt; encrypted. Use at on risk and only apply the following permissions to your keys.
+    </string>
+    <string name="key_requirment1">\u2022 Query Funds</string>
+    <string name="key_requirment2">\u2022 Query Open Orders &amp; Trades</string>
+
+    <string name="powered_by">Powered By</string>
 </resources>
