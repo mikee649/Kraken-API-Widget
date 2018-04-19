@@ -41,7 +41,7 @@ public class KrakenApi {
 
     public interface TradeBalanceCallback{
         void onResponse(TradeBalanceResponse response);
-        void onFailure();
+        void onFailure(Throwable t);
     }
 
     public KrakenApi(String apiKey, String privateKey){
@@ -70,7 +70,7 @@ public class KrakenApi {
 
             @Override
             public void onFailure(Call<TradeBalanceResponse> call, Throwable t) {
-                callback.onFailure();
+                callback.onFailure(t);
             }
         });
     }

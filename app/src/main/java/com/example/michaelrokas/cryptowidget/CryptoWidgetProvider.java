@@ -18,7 +18,6 @@ import com.example.michaelrokas.cryptowidget.Kraken.TradeBalanceResponse;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,10 +26,11 @@ import java.util.Date;
 
 public class CryptoWidgetProvider extends AppWidgetProvider {
 
+    final private String TAG = "Widget";
+
     private String key;
     private String privateKey;
     private boolean showLastRefresh;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -63,15 +63,16 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             @Override
             public void onResponse(TradeBalanceResponse response) {
                 if(response.getResult() != null)
-                    Log.d("Widget Balance", response.getResult().getEquivalentBalance());
+                    Log.d(TAG, "Widget Balance - " + response.getResult().getEquivalentBalance());
                 else
-                    Log.e("error", response.getError()[0]);
-                setupViews(response, context, appWidgetManager, appWidgetIds);
+                    Log.e(TAG, response.getError()[0]);
+                setupViewsSuccess(response, context, appWidgetManager, appWidgetIds);
             }
 
             @Override
-            public void onFailure() {
-                //Todo: implement onFailure
+            public void onFailure(Throwable t) {
+                Log.e(TAG,t.toString());
+                setupViewsSuccess(null, context, appWidgetManager, appWidgetIds);
             }
         };
 
@@ -80,11 +81,13 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
         api.fetchTradeBalance(callbcack);
     }
 
-    private void setupViews(TradeBalanceResponse response, Context context,
-                            AppWidgetManager appWidgetManager, int[] appWidgetIds){
+    private void setupViewsSuccess(TradeBalanceResponse response, Context context,
+                                   AppWidgetManager appWidgetManager, int[] appWidgetIds){
 
         SpannableString formatedBalance;
-        if(response.getResult() != null){
+        if(response == null){
+            formatedBalance = new SpannableString(":-(");
+        } else if(response.getResult() != null){
             formatedBalance = getFormatedBalance(response.getResult().getEquivalentBalance());
         } else {
             formatedBalance = new SpannableString(":-(");

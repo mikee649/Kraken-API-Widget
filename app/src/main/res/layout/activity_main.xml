@@ -89,9 +89,7 @@
                     android:background="@color/disabled"
                     android:textColor="@color/white"
                     android:text="@string/save_settings"/>
-
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -135,39 +133,6 @@
                     android:layout_marginBottom="12dp"
                     android:text="@string/key_requirment2"/>
             </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            card_view:cardCornerRadius="4dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="12dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="@string/powered_by"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"/>
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="96dp"
-                    android:src="@drawable/kraken_banner"/>
-            </LinearLayout>
-
         </android.support.v7.widget.CardView>
     </LinearLayout>
-
 </ScrollView>
