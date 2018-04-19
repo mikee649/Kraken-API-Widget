@@ -10,7 +10,7 @@
 
     <string name="attention">Attention</string>
     <string name="disclaimer">
-        All keys are stored locally on the device and are &lt;b&gt;NOT&lt;/b&gt; encrypted. Use at on risk and only apply the following permissions to your keys.
+        All keys are stored locally on the device and are &lt;b&gt;NOT&lt;/b&gt; encrypted. This means that anyone with access to your device has access to your keys. Use at own risk and only apply the following permissions to your keys.
     </string>
     <string name="key_requirment1">\u2022 Query Funds</string>
     <string name="key_requirment2">\u2022 Query Open Orders &amp; Trades</string>
