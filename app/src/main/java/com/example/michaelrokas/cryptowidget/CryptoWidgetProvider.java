@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.RemoteViews;
 
 import com.example.michaelrokas.cryptowidget.Kraken.KrakenApi;
 import com.example.michaelrokas.cryptowidget.Kraken.TradeBalanceResponse;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,15 +27,15 @@ import java.util.Date;
 
 public class CryptoWidgetProvider extends AppWidgetProvider {
 
-    String key = "";
-    String secret = "";
+    private String key;
+    private String privateKey;
+    private boolean showLastRefresh;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        //Todo: only do this if the action is AppWidgetManager.ACTION_APPWIDGET_UPDATE
         if(intent.getBooleanExtra("refresh", false)) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), CryptoWidgetProvider.class.getName());
@@ -44,6 +46,8 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
     }
 
     public void onUpdate(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
+        getSettings(context);
+
         //show loading spinner
         final int N = appWidgetIds.length;
         for (int i=0; i<N; i++) {
@@ -72,7 +76,7 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
         };
 
         //make api call
-        KrakenApi api = new KrakenApi(key,secret);
+        KrakenApi api = new KrakenApi(key,privateKey);
         api.fetchTradeBalance(callbcack);
     }
 
@@ -95,7 +99,11 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             //show refresh button
             views.setViewVisibility(R.id.progress_bar, View.GONE);
             views.setViewVisibility(R.id.refresh, View.VISIBLE);
-            views.setViewVisibility(R.id.last_update_time, View.VISIBLE);
+
+            if(showLastRefresh)
+                views.setViewVisibility(R.id.last_update_time, View.VISIBLE);
+            else
+                views.setViewVisibility(R.id.last_update_time, View.GONE);
 
             //set last update time
 
@@ -116,6 +124,13 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
             views.setTextViewText(R.id.value, formatedBalance);
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
+
+    public static void sendRefreshBroadcast(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(context, CryptoWidgetProvider.class));
+        intent.putExtra("refresh",true);
+        context.sendBroadcast(intent);
     }
 
     private String getTime(){
@@ -141,5 +156,17 @@ public class CryptoWidgetProvider extends AppWidgetProvider {
                 balanceString.indexOf('.'),balanceString.length(), 0);
 
         return balanceFormated;
+    }
+
+    private void getSettings(Context context){
+        SharedPreferences sharedPref =context.getSharedPreferences(
+                context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        String json = sharedPref.getString("settings", "{}");
+        SettingsObject settings = new Gson().fromJson(json,SettingsObject.class);
+
+        key = settings.getKey();
+        privateKey = settings.getPrivateKey();
+        showLastRefresh = settings.isShowLastRefreshTime();
     }
 }

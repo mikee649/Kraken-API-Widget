@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Kraken API Widget</string>
+    <string name="preference_file_key">com.example.michaelrokas.cryptowidget.SETTINGS_FILE</string>
+
     <string name="api_key">Kraken API Key</string>
     <string name="private_key">Kraken Private Key</string>
     <string name="settings">Settings</string>
