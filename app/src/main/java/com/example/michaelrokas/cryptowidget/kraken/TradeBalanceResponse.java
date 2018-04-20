@@ -1,4 +1,4 @@
-package com.example.michaelrokas.cryptowidget.Kraken;
+package com.example.michaelrokas.cryptowidget.kraken;
 
 /**
  * Created by michaelrokas on 2018-04-17.

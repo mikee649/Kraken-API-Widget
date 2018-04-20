@@ -1,4 +1,4 @@
-package com.example.michaelrokas.cryptowidget.Kraken;
+package com.example.michaelrokas.cryptowidget.kraken;
 
 import android.support.annotation.Nullable;
 

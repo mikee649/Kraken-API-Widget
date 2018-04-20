@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/topLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="256dp"
+    android:layout_height="256dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <com.example.michaelrokas.cryptowidget.googleMobileVision.camera.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.example.michaelrokas.cryptowidget.googleMobileVision.camera.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.example.michaelrokas.cryptowidget.googleMobileVision.camera.CameraSourcePreview>
+
+</LinearLayout>

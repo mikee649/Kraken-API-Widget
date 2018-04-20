@@ -13,8 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.example.michaelrokas.cryptowidget.Kraken.KrakenApi;
-import com.example.michaelrokas.cryptowidget.Kraken.TradeBalanceResponse;
+import com.example.michaelrokas.cryptowidget.kraken.KrakenApi;
+import com.example.michaelrokas.cryptowidget.kraken.TradeBalanceResponse;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;

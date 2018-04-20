@@ -1,35 +1,48 @@
 package com.example.michaelrokas.cryptowidget;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.michaelrokas.cryptowidget.googleMobileVision.BarcodeGraphicTracker;
+import com.example.michaelrokas.cryptowidget.googleMobileVision.CameraFragment;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BarcodeGraphicTracker.BarcodeUpdateListener{
 
     @BindView(R.id.disclaimer)                  TextView disclaimer;
     @BindView(R.id.api_key_field)               EditText keyField;
     @BindView(R.id.private_key_field)           EditText privateKeyField;
     @BindView(R.id.save_btn)                    Button saveBtn;
     @BindView(R.id.show_time_checkbox)          CheckBox showTime;
+    @BindView(R.id.camera_view_holder)          RelativeLayout cameraViewHolder;
 
     SharedPreferences sharedPref;
     SettingsObject currentSettings;
     SettingsObject newSettings;
+
+    boolean cameraOpen = false;
+    CameraFragment cameraFragment;
+    FragmentTransaction fragmentTransaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +91,13 @@ public class MainActivity extends AppCompatActivity {
                 validateSaveButton();
             }
         });
+
+        cameraFragment = new CameraFragment();
+
+        fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.camera_view_holder, cameraFragment, "camera");
+        fragmentTransaction.commit();
+        cameraOpen = true;
     }
 
     private void validateSaveButton(){
@@ -116,5 +136,31 @@ public class MainActivity extends AppCompatActivity {
     private SettingsObject getSettings(){
         String json = sharedPref.getString("settings", "{}");
         return new Gson().fromJson(json,SettingsObject.class);
+    }
+
+    @Override
+    public void onBarcodeDetected(Barcode barcode) {
+        Log.d("Barcode",barcode.displayValue);
+        closeCamera();
+    }
+
+    public void closeCamera(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(cameraOpen) {
+                    ((RelativeLayout)findViewById(R.id.camera_view_holder)).removeAllViews();
+                }
+                cameraOpen = false;
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if(cameraFragment != null)
+            cameraFragment.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 }
