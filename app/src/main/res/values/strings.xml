@@ -21,7 +21,6 @@
     <!-- Google Mobile Vision -->
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="ok">OK</string>
-    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="no_camera_permission">QR Scanner cannot run because it does not have camera permissions</string>
 
 </resources>

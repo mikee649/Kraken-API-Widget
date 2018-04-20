@@ -4,8 +4,10 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,14 +37,13 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
     @BindView(R.id.save_btn)                    Button saveBtn;
     @BindView(R.id.show_time_checkbox)          CheckBox showTime;
     @BindView(R.id.camera_view_holder)          RelativeLayout cameraViewHolder;
-
+    @BindView(R.id.camera_card)                 CardView cameraCard;
     SharedPreferences sharedPref;
     SettingsObject currentSettings;
     SettingsObject newSettings;
 
     boolean cameraOpen = false;
     CameraFragment cameraFragment;
-    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +93,6 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
                 validateSaveButton();
             }
         });
-
-        cameraFragment = new CameraFragment();
-
-        fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.camera_view_holder, cameraFragment, "camera");
-        fragmentTransaction.commit();
-        cameraOpen = true;
     }
 
     private void validateSaveButton(){
@@ -117,6 +112,24 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
         }
     }
 
+    private void processBarcode(Barcode barcode){
+        String str = barcode.displayValue;
+
+        if(str.indexOf("secret=") > str.indexOf("key=")&& str.contains("key=")){
+            final String key = str.substring(str.indexOf("key=")+4,str.indexOf("&"));
+            final String secret = str.substring(str.indexOf("secret=")+7);
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    keyField.setText(key);
+                    privateKeyField.setText(secret);
+                }
+            });
+
+        }
+    }
+
     @OnClick(R.id.save_btn)
     protected void saveSettings(){
         String json = new Gson().toJson(newSettings);
@@ -133,6 +146,18 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
         validateSaveButton();
     }
 
+    @OnClick(R.id.camera_btn)
+    protected void startQRScanner(){
+        if(!cameraOpen) {
+            cameraCard.setVisibility(View.VISIBLE);
+            cameraFragment = new CameraFragment();
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.camera_view_holder, cameraFragment, "camera");
+            fragmentTransaction.commit();
+            cameraOpen = true;
+        }
+    }
+
     private SettingsObject getSettings(){
         String json = sharedPref.getString("settings", "{}");
         return new Gson().fromJson(json,SettingsObject.class);
@@ -142,14 +167,20 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
     public void onBarcodeDetected(Barcode barcode) {
         Log.d("Barcode",barcode.displayValue);
         closeCamera();
+
+        processBarcode(barcode);
     }
 
+    @OnClick(R.id.close_btn)
     public void closeCamera(){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                cameraViewHolder.setVisibility(View.INVISIBLE);
                 if(cameraOpen) {
-                    ((RelativeLayout)findViewById(R.id.camera_view_holder)).removeAllViews();
+                    cameraCard.setVisibility(View.GONE);
+                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                    fragmentTransaction.remove(cameraFragment).commit();
                 }
                 cameraOpen = false;
             }
@@ -162,5 +193,9 @@ public class MainActivity extends AppCompatActivity implements BarcodeGraphicTra
                                            @NonNull int[] grantResults) {
         if(cameraFragment != null)
             cameraFragment.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    public void onCameraLoaded(){
+        cameraViewHolder.setVisibility(View.VISIBLE);
     }
 }
