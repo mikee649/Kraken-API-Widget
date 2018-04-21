@@ -6,8 +6,9 @@ This project is a widget that is used to display a cryprocurrency balance in CAD
 (or when the refresh button is clicked) to get the account balance.
 
 <img src="widget-image.png" width="400">
+<img src="settings-screen-image.png" width="200">
 
 ## Features
 * Transparent widget displaying total Kraken balance
 * Settings screen
-* QR code scanner (using [Mobile Vision](https://developers.google.com/vision/) to quickly enter API keys
+* QR code scanner (using [Mobile Vision](https://developers.google.com/vision/)) to quickly enter API keys
