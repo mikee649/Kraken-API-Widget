@@ -11,4 +11,4 @@ and modify this project however you see fit.
 * Settings screen
 * QR code scanner (using [Mobile Vision](https://developers.google.com/vision/)) to quickly enter API keys
 
-<img src="widget.png" width="200"> <img src="settings-screen-image.png" width="200">
+<img src="widget.png" width="200"> <img src="settings.png" width="200">
